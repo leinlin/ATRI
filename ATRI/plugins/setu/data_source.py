@@ -9,7 +9,7 @@ from ATRI.config import Setu as ST
 from .tf_dealer import detect_image
 
 
-LOLICON_URL = "https://api.lolicon.app/setu/v2"
+LOLICON_URL = "https://api.lolicon.app/setu/v2?size=regular"
 DEFAULT_SETU = (
     "https://i.pixiv.cat/img-original/img/2021/02/28/22/44/49/88124144_p0.jpg"
 )
@@ -40,10 +40,12 @@ class Setu(Service):
         data: dict = temp_data[0]
         title = data.get("title", "木陰のねこ")
         p_id = data.get("pid", 88124144)
-        url: str = data["urls"].get("original", "ignore")
+        url: str = data["urls"].get("regular", "ignore")
 
         setu = MessageSegment.image(cls._use_proxy(url), timeout=114514)
-        repo = f"Title: {title}\nPid: {p_id}"
+        tags = data.get("tags", ["女孩子"])
+        author = data.get("author", "Bison")
+        repo = f"Title: {title}\nPid: {p_id}\n作者:{author} \n性癖：{','.join(tags)}\nurl:https://www.pixiv.net/artworks/{p_id}"
         return repo, setu
 
     @classmethod
@@ -51,7 +53,7 @@ class Setu(Service):
         """
         指定tag涩图.
         """
-        url = LOLICON_URL + f"?tag={tag}"
+        url = LOLICON_URL + f"&keyword={tag}"
         res = await request.get(url)
         data: dict = res.json()
 
@@ -63,11 +65,13 @@ class Setu(Service):
         title = data.get("title", "木陰のねこ")
         p_id = data.get("pid", 88124144)
         url = data["urls"].get(
-            "original",
+            "regular",
             cls._use_proxy(DEFAULT_SETU),
         )
         setu = MessageSegment.image(url, timeout=114514)
-        repo = f"Title: {title}\nPid: {p_id}"
+        tags = data.get("tags", ["女孩子"])
+        author = data.get("author", "Bison")
+        repo = f"Title: {title}\nPid: {p_id}\n作者:{author} \n性癖：{','.join(tags)}\nurl:https://www.pixiv.net/artworks/{p_id}"
         return repo, setu
 
     @staticmethod
@@ -95,7 +99,7 @@ class Setu(Service):
         tag = choice(temp_data.get("tags", ["女孩子"]))
 
         url = temp_data[0]["urls"].get(
-            "original",
+            "regular",
             cls._use_proxy(DEFAULT_SETU),
         )
         setu = MessageSegment.image(url, timeout=114514)

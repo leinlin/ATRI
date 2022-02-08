@@ -13,7 +13,7 @@ from ATRI.utils.apscheduler import scheduler
 from .data_source import Setu
 
 
-random_setu = Setu().on_command("来张涩图", "来张随机涩图，冷却2分钟", aliases={"涩图来", "来点涩图", "来份涩图"})
+random_setu = Setu().on_command("来张涩图", "来张随机涩图，冷却2分钟", aliases={"涩图来", "来点涩图", "来份涩图", "涩图"})
 
 
 @random_setu.handle()
@@ -32,16 +32,38 @@ async def _random_setu(bot: Bot, event: MessageEvent):
     loop.create_task(Setu().async_recall(bot, event_id))
 
 
-@random_setu.got(
-    "r_rush_after_think", prompt="看完不来点感想么-w-", parameterless=[Cooldown(120)]
+consolation_setu = Setu().on_regex("(涩图Time)|(我哭了)|(我枯了)|(跳楼)|(想死)|(想不开)|(我裂开了)", "涩图Time,冷却2分钟")
+
+
+@consolation_setu.handle()
+async def _onsolation_setu(bot: Bot, event: MessageEvent):
+    loop = asyncio.get_running_loop()
+
+    await bot.send(event, "涩图Time~~~~")
+    count = 0
+    while (count < 5):
+        repo, setu = await Setu().random_setu()
+        await bot.send(event, repo)
+
+        try:
+            msg_1 = await bot.send(event, Message(setu))
+        except Exception:
+            await consolation_setu.finish("hso（发不出")
+
+        #event_id = msg_1["message_id"]
+        #loop.create_task(Setu().async_recall(bot, event_id))
+        count = count + 1
+
+
+@consolation_setu.got(
+    "r_rush_after_think", prompt="好好活着就可以看到更多更涩的涩图ヾ(◍°∇°◍)ﾉﾞ", parameterless=[Cooldown(120)]
 )
 async def _(think: str = ArgPlainText("r_rush_after_think")):
     is_repo = will_think(think)
     if not is_repo:
-        await random_setu.finish()
+        await consolation_setu.finish()
     else:
-        await random_setu.finish(is_repo)
-
+        await consolation_setu.finish(is_repo)
 
 tag_setu = Setu().on_regex(r"来[张点丶份](.*?)的[涩色🐍]图", "根据提供的tag查找涩图，冷却2分钟")
 
@@ -66,15 +88,6 @@ async def _tag_setu(bot: Bot, event: MessageEvent):
 
     event_id = msg_1["message_id"]
     loop.create_task(Setu().async_recall(bot, event_id))
-
-
-@tag_setu.got("t_rush_after_think", prompt="看完不来点感想么-w-", parameterless=[Cooldown(120)])
-async def _(think: str = ArgPlainText("t_rush_after_think")):
-    is_repo = will_think(think)
-    if not is_repo:
-        await random_setu.finish()
-    else:
-        await random_setu.finish(is_repo)
 
 
 _catcher_max_file_size = 128
@@ -195,7 +208,7 @@ async def _scheduler_setu(bot):
 
 
 _ag_l = ["涩图来", "来点涩图", "来份涩图"]
-_ag_patt = r"来[张点丶份](.*?)的[涩色🐍]图"
+_ag_patt = r"[来\s\S][张点丶份\s\S](.*?)[画\s\S]的[涩色🐍]图"
 
 _nice_patt = r"[hH好][sS涩色][oO哦]|[嗯恩摁社蛇🐍射]了|(硬|石更)了|[牛🐂][牛🐂]要炸了|[炼恋]起来|开?导"
 _nope_patt = r"不够[涩色]|就这|不行|不彳亍|一般|这也[是叫算]|[?？]|就这|爬|爪巴"

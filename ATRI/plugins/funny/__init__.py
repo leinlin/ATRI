@@ -4,7 +4,7 @@ from nonebot.matcher import Matcher
 from nonebot.params import ArgPlainText, CommandArg
 from nonebot.adapters.onebot.v11 import Bot, MessageEvent, GroupMessageEvent, Message
 from nonebot.adapters.onebot.v11.helpers import Cooldown
-
+from nonebot.adapters.onebot.v11 import MessageSegment
 from .data_source import Funny
 
 
@@ -16,17 +16,12 @@ async def _get_laugh(bot: Bot, event: MessageEvent):
     user_name = event.sender.nickname or "该裙友"
     await get_laugh.finish(await Funny().idk_laugh(user_name))
 
-
-me_re_you = Funny().on_regex(r"我", "我也不懂咋解释", block=False)
-
-
-@me_re_you.handle()
-async def _me_re_you(bot: Bot, event: MessageEvent):
-    if randint(0, 15) == 5:
-        msg = str(event.get_message())
-        content, is_ok = Funny().me_re_you(msg)
-        if is_ok:
-            await me_re_you.finish(content)
+never_give_up = Funny().on_regex(r"([算|寄]了)|(放弃)|(太难了)|(日子难过)", "人不能随便就半途而废呢")
+@never_give_up.handle()
+async def _never_give_up(bot: Bot, event: MessageEvent):
+    await never_give_up.finish("人不能随便就半途而废呢,阳光总在风雨后嘿嘿" + MessageSegment.image(
+                    file="https://cdn.jsdelivr.net/gh/Kyomotoi/CDN@master/project/ATRI/wife3.jpg"
+                ))
 
 
 _fake_flmt_notice = choice(["慢...慢一..点❤", "冷静1下", "歇会歇会~~"])
@@ -37,7 +32,7 @@ fake_msg = Funny().on_command(
 )
 
 
-@fake_msg.handle([Cooldown(3600, prompt=_fake_flmt_notice)])
+@fake_msg.handle([Cooldown(10, prompt=_fake_flmt_notice)])
 async def _ready_fake(matcher: Matcher, args: Message = CommandArg()):
     msg = args.extract_plain_text()
     if msg:
