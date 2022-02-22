@@ -1,9 +1,9 @@
 import re
+import json
 from random import choice, random
-import _pickle as pickle
 from nonebot.matcher import Matcher
 from nonebot.params import CommandArg, ArgPlainText
-from nonebot.adapters.onebot.v11 import MessageEvent, Message
+from nonebot.adapters.onebot.v11 import MessageEvent, Message,MessageSegment
 from nonebot.adapters.onebot.v11.helpers import Cooldown
 
 from .data_source import Encrypt, Utils, Yinglish
@@ -42,7 +42,14 @@ async def _ready_en(matcher: Matcher, args: Message = CommandArg()):
 
 @encrypt_en.got("encr_en_text", "内容呢？！")
 async def _deal_en(event: MessageEvent):
-    text = str(pickle.dumps(event))
+    replyArray = []
+    for v in event:
+        if v.type == "image":
+            replyArray.append({"type":'image', "data":{'file':v.data.file}})
+        elif v.type == "text":
+            replyArray.append({"type":'text', "data":{'text':v.data.text}})
+
+    text = json.dumps(replyArray)
     is_ok = len(text)
     if is_ok < 10:
         await encrypt_en.reject("太短不加密！")
@@ -65,12 +72,12 @@ async def _ready_de(matcher: Matcher, args: Message = CommandArg()):
 async def _deal_de(text: str = ArgPlainText("encr_de_text")):
     en = Encrypt()
     result = en.decode(text)
-    try:
-        json_object = pickle.loads(bytes(result))
-        await encrypt_de.finish(result)
-    except BaseException:
-        await encrypt_de.reject("解密失败！")
-
+    replyArray = json.loads(result)
+    msgArray = []
+    for v in replyArray:
+        msgArray.append(MessageSegment(type=replyArray.type, data=replyArray.data))
+    
+    await encrypt_de.finish(msgArray)
 
 
 
