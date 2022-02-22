@@ -1,6 +1,6 @@
 import re
 from random import choice, random
-import cPickle as pickle
+import _pickle as pickle
 from nonebot.matcher import Matcher
 from nonebot.params import CommandArg, ArgPlainText
 from nonebot.adapters.onebot.v11 import MessageEvent, Message
