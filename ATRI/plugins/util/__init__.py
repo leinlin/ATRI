@@ -32,14 +32,6 @@ async def _deal_roll(roll_msg: str = ArgPlainText("roll")):
 
 encrypt_en = Utils().on_command("加密", "我们之间的秘密❤")
 
-
-@encrypt_en.handle()
-async def _ready_en(matcher: Matcher, args: Message = CommandArg()):
-    msg = args.extract_plain_text()
-    if msg:
-        matcher.set_arg("encr_en_text", args)
-
-
 @encrypt_en.got("encr_en_text", "内容呢？！")
 async def _deal_en(event: MessageEvent):
     replyArray = []
