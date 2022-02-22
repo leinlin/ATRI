@@ -20,7 +20,7 @@ never_give_up = Funny().on_regex(r"太难了", "人不能随便就半途而废�
 @never_give_up.handle()
 async def _never_give_up(bot: Bot, event: MessageEvent):
     await never_give_up.finish(MessageSegment.image(
-                    file="https://cdn.jsdelivr.net/gh/Kyomotoi/CDN@master/project/ATRI/wife3.jpg"
+                    file="https://cdn.jsdelivr.net/gh/leinlin/CDN@master/project/ATRI/nan.jpg"
                 ))
 
 
