@@ -42,7 +42,7 @@ async def _ready_en(matcher: Matcher, args: Message = CommandArg()):
 
 @encrypt_en.got("encr_en_text", "内容呢？！")
 async def _deal_en(event: MessageEvent):
-    text = pickle.dumps(event).decode('utf8')
+    text = str(pickle.dumps(event))
     is_ok = len(text)
     if is_ok < 10:
         await encrypt_en.reject("太短不加密！")
@@ -64,9 +64,9 @@ async def _ready_de(matcher: Matcher, args: Message = CommandArg()):
 @encrypt_de.got("encr_de_text", "内容呢？！")
 async def _deal_de(text: str = ArgPlainText("encr_de_text")):
     en = Encrypt()
-    result = en.decode(text).encode('utf8')
+    result = en.decode(text)
     try:
-        json_object = pickle.loads(result)
+        json_object = pickle.loads(bytes(result))
         await encrypt_de.finish(result)
     except BaseException:
         await encrypt_de.reject("解密失败！")
