@@ -1,6 +1,6 @@
 import re
 from random import choice, random
-import json
+import cPickle as pickle
 from nonebot.matcher import Matcher
 from nonebot.params import CommandArg, ArgPlainText
 from nonebot.adapters.onebot.v11 import MessageEvent, Message
@@ -42,7 +42,7 @@ async def _ready_en(matcher: Matcher, args: Message = CommandArg()):
 
 @encrypt_en.got("encr_en_text", "内容呢？！")
 async def _deal_en(event: MessageEvent):
-    text = json.dumps(event)
+    text = pickle.dumps(event)
     is_ok = len(text)
     if is_ok < 10:
         await encrypt_en.reject("太短不加密！")
@@ -66,7 +66,7 @@ async def _deal_de(text: str = ArgPlainText("encr_de_text")):
     en = Encrypt()
     result = en.decode(text)
     try:
-        json_object = json.loads(result)
+        json_object = pickle.loads(result)
         await encrypt_de.finish(result)
     except BaseException:
         await encrypt_de.reject("解密失败！")
