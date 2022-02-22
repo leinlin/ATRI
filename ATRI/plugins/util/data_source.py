@@ -76,11 +76,18 @@ class Encrypt(Utils):
         if i > 0xFF:
             raise ValueError("ERROR! at/ri overflow")
 
+        char = [
+            self.cr[self._div(i, self.sc)],
+            self.cc[i % self.sc],
+        ]
         if i > 0x7F:
             i = i & 0x7F
-            return self.cn[self._div(i, self.sb) + int(self.cb[i % self.sb])]
+            char = [
+                self.cn[self._div(i, self.sb)],
+                self.cb[i % self.sb],
+            ]
 
-        return self.cr[self._div(i, self.sc) + int(self.cc[i % self.sc])]
+        return "".join(char)
 
     def _encodeShort(self, i) -> str:
         if i > 0xFFFF:
@@ -147,6 +154,8 @@ class Encrypt(Utils):
 
     def _encodeBytes(self, b) -> str:
         result = []
+        if len(b) & 1 == 1:
+            b = b + " "
         for i in range(0, (len(b) >> 1)):
             result.append(self._encodeShort((b[i * 2] << 8 | b[i * 2 + 1])))
 
