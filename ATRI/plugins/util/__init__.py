@@ -75,7 +75,7 @@ async def _deal_de(text: str = ArgPlainText("encr_de_text")):
     replyArray = json.loads(result)
     msgArray = []
     for v in replyArray:
-        msgArray.append(MessageSegment(type=replyArray.type, data=replyArray.data))
+        msgArray.append(MessageSegment(type=v["type"], data=v["data"]))
     
     await encrypt_de.finish(msgArray)
 
