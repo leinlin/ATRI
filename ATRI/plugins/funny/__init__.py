@@ -22,7 +22,7 @@ async def _never_give_up(bot: Bot, event: MessageEvent):
     url = choice(
             [
                 "https://cdn.jsdelivr.net/gh/leinlin/CDN@master/project/ATRI/nan1.jpg",
-                "https://cdn.jsdelivr.net/gh/leinlin/CDN@master/project/ATRI/nan2.gif",
+                "https://cdn.jsdelivr.net/gh/leinlin/CDN@master/project/ATRI/nan2.gif"
             ]
         )
     await never_give_up.finish(MessageSegment.image(
