@@ -154,8 +154,6 @@ class Encrypt(Utils):
 
     def _encodeBytes(self, b) -> str:
         result = []
-        if len(b) & 1 == 1:
-            b = b + " "
         for i in range(0, (len(b) >> 1)):
             result.append(self._encodeShort((b[i * 2] << 8 | b[i * 2 + 1])))
 
@@ -167,7 +165,8 @@ class Encrypt(Utils):
     def encode(self, s: str, encoding: str = "utf-8"):
         if not isinstance(s, str):
             raise ValueError("Please enter str instead of other")
-
+        if len(s.encode(encoding)) & 1 == 1:
+            s =  s + " "
         return self._encodeBytes(s.encode(encoding))
 
     def _decodeBytes(self, s: str):
