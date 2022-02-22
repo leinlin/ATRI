@@ -43,8 +43,9 @@ async def _ready_en(matcher: Matcher, args: Message = CommandArg()):
 @encrypt_en.got("encr_en_text", "内容呢？！")
 async def _deal_en(text: str = ArgPlainText("encr_en_text")):
     is_ok = len(text)
-    if is_ok < 1:
-        await encrypt_en.reject("太短不加密！")
+    if is_ok < 10:
+        text = text + "          "
+        #await encrypt_en.reject("太短不加密！")
     en = Encrypt()
     result = en.encode(text)
     await encrypt_en.finish(result)
