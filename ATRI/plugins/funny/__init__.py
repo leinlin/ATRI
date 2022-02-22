@@ -16,10 +16,10 @@ async def _get_laugh(bot: Bot, event: MessageEvent):
     user_name = event.sender.nickname or "该裙友"
     await get_laugh.finish(await Funny().idk_laugh(user_name))
 
-never_give_up = Funny().on_regex(r"([算|寄]了)|(放弃)|(太难了)|(日子难过)", "人不能随便就半途而废呢")
+never_give_up = Funny().on_regex(r"太难了", "人不能随便就半途而废呢")
 @never_give_up.handle()
 async def _never_give_up(bot: Bot, event: MessageEvent):
-    await never_give_up.finish("人不能随便就半途而废呢,阳光总在风雨后嘿嘿" + MessageSegment.image(
+    await never_give_up.finish(MessageSegment.image(
                     file="https://cdn.jsdelivr.net/gh/Kyomotoi/CDN@master/project/ATRI/wife3.jpg"
                 ))
 
