@@ -90,7 +90,7 @@ async def _tag_setu(bot: Bot, event: MessageEvent):
     loop.create_task(Setu().async_recall(bot, event_id))
 
 
-_catcher_max_file_size = 128
+_catcher_max_file_size = 16
 
 
 setu_catcher = Setu().on_message("涩图嗅探", "涩图嗅探器", block=False)

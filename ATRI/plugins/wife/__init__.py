@@ -12,7 +12,7 @@ from nonebot.adapters.onebot.v11.helpers import Cooldown
 from .data_source import Wife
 
 
-_is_tietie = True
+_is_tietie = False
 
 
 tietie_superuser = Wife().on_message(

@@ -19,8 +19,14 @@ async def _get_laugh(bot: Bot, event: MessageEvent):
 never_give_up = Funny().on_regex(r"太难了", "人不能随便就半途而废呢")
 @never_give_up.handle()
 async def _never_give_up(bot: Bot, event: MessageEvent):
+    url = choice(
+            [
+                "https://cdn.jsdelivr.net/gh/leinlin/CDN@master/project/ATRI/nan1.jpg",
+                "https://cdn.jsdelivr.net/gh/leinlin/CDN@master/project/ATRI/nan2.gif",
+            ]
+        )
     await never_give_up.finish(MessageSegment.image(
-                    file="https://cdn.jsdelivr.net/gh/leinlin/CDN@master/project/ATRI/nan.jpg"
+                    file=url
                 ))
 
 
