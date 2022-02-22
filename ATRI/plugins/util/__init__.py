@@ -68,7 +68,7 @@ async def _deal_de(text: str = ArgPlainText("encr_de_text")):
     try:
         json_object = json.loads(result)
         await encrypt_de.finish(result)
-    except ValueError, e:
+    except BaseException:
         await encrypt_de.reject("解密失败！")
 
 
