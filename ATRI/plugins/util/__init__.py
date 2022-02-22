@@ -43,7 +43,7 @@ async def _ready_en(matcher: Matcher, args: Message = CommandArg()):
 @encrypt_en.got("encr_en_text", "内容呢？！")
 async def _deal_en(event: MessageEvent):
     replyArray = []
-    for v in event:
+    for v in event.get_message():
         if v.type == "image":
             replyArray.append({"type":'image', "data":{'file':v.data.file}})
         elif v.type == "text":
