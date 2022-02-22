@@ -1,6 +1,6 @@
 import re
 from random import choice, random
-
+import json
 from nonebot.matcher import Matcher
 from nonebot.params import CommandArg, ArgPlainText
 from nonebot.adapters.onebot.v11 import MessageEvent, Message
@@ -41,11 +41,11 @@ async def _ready_en(matcher: Matcher, args: Message = CommandArg()):
 
 
 @encrypt_en.got("encr_en_text", "内容呢？！")
-async def _deal_en(text: str = ArgPlainText("encr_en_text")):
+async def _deal_en(event: MessageEvent):
+    text = json.dumps(event)
     is_ok = len(text)
     if is_ok < 10:
-        text = text + "？？？？？？？？？"
-        #await encrypt_en.reject("太短不加密！")
+        await encrypt_en.reject("太短不加密！")
     en = Encrypt()
     result = en.encode(text)
     await encrypt_en.finish(result)
@@ -65,7 +65,13 @@ async def _ready_de(matcher: Matcher, args: Message = CommandArg()):
 async def _deal_de(text: str = ArgPlainText("encr_de_text")):
     en = Encrypt()
     result = en.decode(text)
-    await encrypt_de.finish(result)
+    try:
+        json_object = json.loads(result)
+        await encrypt_de.finish(result)
+    except ValueError, e:
+        await encrypt_de.reject("解密失败！")
+
+
 
 
 sepi = Utils().on_command("涩批一下", "将正常的句子涩一涩~")
