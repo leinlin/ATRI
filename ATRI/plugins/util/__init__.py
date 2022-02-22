@@ -37,7 +37,7 @@ async def _deal_en(event: MessageEvent):
     replyArray = []
     for v in event.get_message():
         if v.type == "image":
-            replyArray.append({"type":'image', "data":{'url':v.data['url']}})
+            replyArray.append({"type":'image', "data":{'file':v.data['url']}})
         elif v.type == "text":
             replyArray.append({"type":'text', "data":{'text':v.data['text']}})
 
